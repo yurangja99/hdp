@@ -28,6 +28,16 @@ conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 pip install -r requirements.txt
 ```
 
+## Installation with Docker
+First, install Docker. 
+
+Then, run the following scripts in the repository root directory. 
+
+```bash
+bash extra_scripts/create_container.sh
+bash extra_scripts/initialize_container.sh
+```
+
 ## Running in headless mode
 Please refer to the official guide of [RLBench](https://github.com/stepjam/RLBench?tab=readme-ov-file#running-headless).
 
@@ -40,6 +50,10 @@ For example, to generate a dataset for the `reach_target` task,
 ```bash
 python extra_scripts/dataset_generator.py --save_path=/data/${USER}/rlbench --tasks=reach_target --variations=1 --processes=1 --episodes_per_task=100
 ```
+For example, to generate a dataset for 11 tasks in the paper,
+```bash
+python extra_scripts/dataset_generator.py --save_path=/workspace/data --tasks=reach_target,take_lid_off_saucepan,pick_up_cup,toilet_seat_up,open_box,open_door,open_drawer,open_grill,open_microwave,open_oven,put_knife_on_chopping_board --variations=1 --processes=1 --episodes_per_task=100
+```
 The script will generate both `train` and `eval` datasets at the same time.
 
 ## Training the low-level RK-Diffuser
@@ -51,6 +65,11 @@ python3 train_low_level.py env=sim env.data_path=<your dataset path> env.tasks="
 For example, to train a model for the `reach_target` and the `take_lid_off_saucepan` tasks, run
 ```bash
 python3 train_low_level.py env=sim env.data_path=/data/${USER}/rlbench env.tasks="[reach_target, take_lid_off_saucepan]"
+```
+
+For example, to train a model for all 11 tasks in the paper, run
+```bash
+python3 train_low_level.py env=sim env.data_path=/workspace/data env.tasks="[reach_target,take_lid_off_saucepan,pick_up_cup,toilet_seat_up,open_box,open_door,open_drawer,open_grill,open_microwave,open_oven,put_knife_on_chopping_board]"
 ```
 
 You can enable online logging or set wandb run name by adding the following args
