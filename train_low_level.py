@@ -25,8 +25,11 @@ def _create_agent_fn(
     pose_augment=False,
 ):
     robot = None
+    file_path = os.path.join(*__file__.split("/")[:-1])
     if diffusion_var in ["joint_positions", "multi"]:
-        robot = DiffRobot("./rk_diffuser/panda_urdf/panda.urdf", "Pandatip")
+        robot = DiffRobot(
+            os.path.join("/", file_path, "panda_urdf/panda.urdf"),
+        )
     if robot is not None:
         robot.to(device)
 

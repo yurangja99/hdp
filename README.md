@@ -14,7 +14,7 @@ Dyson Robot Learning Lab
 
 HDP factorises a manipulation policy into a hierarchical structure: a high-level task-planning agent which predicts a distant next-best end-effector pose (NBP), and a low-level goal-conditioned diffusion policy which generates optimal motion trajectories. The factorised policy representation allows HDP to tackle both long-horizon task planning while generating fine-grained low-level actions. To generate context-aware motion trajectories while satisfying robot kinematics constraints, we present a novel kinematics-aware goal-conditioned control agent, Robot Kinematics Diffuser (RK-Diffuser). Specifically, RK-Diffuser learns to generate both the end-effector pose and joint position trajectories, and distill the accurate but kinematics-unaware end-effector pose diffuser to the kinematics-aware but less accurate joint position diffuser via differentiable kinematics.
 
-In this repository, we provide the code for training the low-level RK-Diffuser. We use PerAct as our high-level agent and we refer to its [official implementation](https://github.com/peract/peract).
+In this repository, we provide the code for training the low-level RK-Diffuser. We use PerAct as our high-level agent and we refer to its [official implementation](https://github.com/peract/peract) for detailed training configurations. We also include the evaluation code for the HDP architecture.
 
 For more details, see our [project page](https://yusufma03.github.io/projects/hdp/).
 
@@ -25,7 +25,9 @@ conda create -n hdp python=3.10
 conda activate hdp
 bash ./extra_scripts/install_coppeliasim.sh
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
+pip install cffi==1.15
 pip install -r requirements.txt
+python setup.py develop
 ```
 
 ## Running in headless mode
@@ -58,6 +60,12 @@ You can enable online logging or set wandb run name by adding the following args
 log=True run_name=<your run name>
 ```
 
+## Evaluate the models
+We also provide the full evaluation pipeline to HDP. To run the evaluation, simply do
+```bash
+python eval.py rlbench.tasks="[<your task>]" rlbench.headless=False method.model_path=<path to rk-diffuser ckpt> framework.logdir=<path to peract ckpt dir>
+```
+
 ## Citation
 
 ```bibtex
@@ -68,3 +76,7 @@ log=True run_name=<your run name>
   year      = {2024},
 }
 ```
+
+## Credits
+
+This repository is adapted from [PerAct](https://github.com/peract/peract) and [decision diffusers](https://github.com/anuragajay/decision-diffuser/tree/main/code).
